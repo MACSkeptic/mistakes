@@ -1,5 +1,6 @@
 /**
  * base dummy code to exemplify a simple sequence of (potentially) async steps
+ * feel free to ignore this block and jump straight to the 3 examples below
  */
 const performRequest = (arbitraryDelayInSecondsForTheSakeOfExemplifying) => {
   console.log('--> async step performRequest - start');
@@ -25,24 +26,29 @@ const formatResultForReturning = (result) => {
  * note that this would normally be written as:
  *   return performRequest(5)
  *     .then(parseResponse)
- *     .then(performProcessing)
+ *     .then(performProcessing) <--- function not being called "now", just passed as an argument to be called "in the future"
  *     .then(formatResultForReturning)
  *
  * I only expanded it to be able to make it clear that some steps in that chain will in fact happen synchronously
  */
 const exampleWithPromises = () => {
+  /* no time travel, every piece of code in this function is executed synchronously at once */
   console.log('-> sync step call perform request');
   const responsePromise = performRequest(5);
 
+  /* functions are passed as arguments to (potentially) be called in the future */
   console.log('-> sync step register response parse after request is done');
   const bodyPromise = responsePromise.then(parseResponse);
 
+  /* functions act as a strong border between code that runs "now" vs "in the future" */
   console.log('-> sync step register body processing after response parsing is done');
   const resultPromise = bodyPromise.then(performProcessing);
 
+  /* this aligns with the event/callback mentality of operating under an event loop */
   console.log('-> sync step register format result after body processing is done');
   const returnPromise = resultPromise.then(formatResultForReturning);
 
+  /* do as much as possible, return, then get out of the loop and wait to be called */
   console.log('-> sync step done, will return');
   return returnPromise;
 };
@@ -51,18 +57,23 @@ const exampleWithPromises = () => {
  * solving the problem using async await
  */
 async function exampleWithAsyncAwait() {
+  /* time travel, await causes code after it to be executed "in the future" */
   console.log('-> async step call perform request');
   const response = await performRequest(5);
 
+  /* might look nice and sequential, but there is a lot of cascading going on here */
   console.log('-> async step wait for response to be parsed');
   const body = await parseResponse(response);
 
+  /* I'd argue this is a trap, making complex things _look_ simple is not good */
   console.log('-> async step wait for body to be processed');
   const result = await performProcessing(body);
 
+  /* there is no well defined boundary between code executed "now" vs code executed "in the future" */
   console.log('-> async step wait for result to be formatted');
   const returnValue = await formatResultForReturning(result);
 
+  /* see below for a depiction of what this code is _really_ doing */
   console.log('-> async? step done, will return');
   return returnValue;
 }
