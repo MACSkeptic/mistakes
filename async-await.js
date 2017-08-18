@@ -119,5 +119,62 @@ const exampleWithPromisesMimicAsyncAwait = () => {
   console.log('-----------------------------------------------------------------');
 });
 
-
+/**
+$ node async-await.js
+-----------------------------------------------------------------
+=> using promises
+== start ==
+-> sync step call perform request
+--> async step performRequest - start
+-> sync step register response parse after request is done
+-> sync step register body processing after response parsing is done
+-> sync step register format result after body processing is done
+-> sync step done, will return
+== sync end ==
+--> async step performRequest - end
+--> async step parseResponse - start
+--> async step parseResponse - end
+--> async step performProcessing - start
+--> async step performProcessing - end
+--> async step formatResultForReturning - start
+--> async step formatResultForReturning - end
+== async end ==
+-----------------------------------------------------------------
+=> async await
+== start ==
+-> async step call perform request
+--> async step performRequest - start
+== sync end ==
+--> async step performRequest - end
+-> async step wait for response to be parsed
+--> async step parseResponse - start
+--> async step parseResponse - end
+-> async step wait for body to be processed
+--> async step performProcessing - start
+--> async step performProcessing - end
+-> async step wait for result to be formatted
+--> async step formatResultForReturning - start
+--> async step formatResultForReturning - end
+-> async? step done, will return
+== async end ==
+-----------------------------------------------------------------
+=> async await using promises
+== start ==
+-> async step call perform request
+--> async step performRequest - start
+== sync end ==
+--> async step performRequest - end
+-> async step wait for response to be parsed
+--> async step parseResponse - start
+--> async step parseResponse - end
+-> async step wait for body to be processed
+--> async step performProcessing - start
+--> async step performProcessing - end
+-> async step wait for result to be formatted
+--> async step formatResultForReturning - start
+--> async step formatResultForReturning - end
+-> async? step done, will return
+== async end ==
+-----------------------------------------------------------------
+**/
 
